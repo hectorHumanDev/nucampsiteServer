@@ -40,10 +40,10 @@ function auth(req, res, next) {
     console.log("line 40: not authenticated");
     return next(err);
   }
-
   const auth = Buffer.from(authHeader.split(" ")[1], "base64")
     .toString()
     .split(":");
+  console.log(`authHeader:`, typeof auth);
 
   const user = auth[0];
   const pass = auth[1];
