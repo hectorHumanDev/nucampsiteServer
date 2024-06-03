@@ -1,13 +1,23 @@
 const express = require("express");
 const User = require("../models/user");
-const usersRouter = express.Router();
 const passport = require("passport");
 const authenticate = require("../authenticate");
 
+const usersRouter = express.Router();
+
 /* GET users listing. */
-usersRouter.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
+
+usersRouter
+  .route("/")
+  .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    User.find({})
+      .then((users) => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json(users);
+      })
+      .catch((err) => next(err));
+  });
 
 usersRouter.post("/signup", async (req, res) => {
   try {
@@ -52,10 +62,11 @@ usersRouter.get("/logout", (req, res, next) => {
   if (req.session) {
     req.session.destroy();
     res.clearCookie("session-id");
-    res.redirect("/login");
+    res.redirect("/");
   } else {
-    const err = new Error("You are not logged in");
-    next(err);
+    const err = new Error("You are not logged in!");
+    err.status = 401;
+    return next(err);
   }
 });
 

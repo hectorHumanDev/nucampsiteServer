@@ -2,8 +2,10 @@ const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const logger = require("morgan");
+
 const passport = require("passport");
 const config = require("./config");
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/usersRouter");
 const campsiteRouter = require("./routes/campsiteRouter");
@@ -15,9 +17,10 @@ const mongoose = require("mongoose");
 const url = config.mongoUrl;
 const connect = mongoose.connect(url, {});
 
-connect.then(() => {
-  console.log("connected correctly to server"), (err) => console.log(err);
-});
+connect.then(
+  () => console.log("Connected correctly to server"),
+  (err) => console.log(err)
+);
 
 const app = express();
 
@@ -28,7 +31,7 @@ app.set("view engine", "jade");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//app.use(cookieParser("12345-67890-09876-54321"));
+//app.use(cookieParser('12345-67890-09876-54321'));
 
 app.use(passport.initialize());
 

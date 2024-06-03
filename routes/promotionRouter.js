@@ -15,7 +15,7 @@ promotionRouter
       })
       .catch((err) => next(err));
   })
-  .post(authenticate.verifyUser, (req, res, next) => {
+  .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotion.create(req.body)
       .then((promotion) => {
         res.statusCode = 200;
@@ -30,15 +30,19 @@ promotionRouter
       `PUT operation not supported on /promotions/${req.params.promotionId}`
     );
   })
-  .delete(authenticate.verifyUser, (req, res, next) => {
-    Promotion.deleteMany()
-      .then((promotions) => {
-        res.statusCode = 200;
-        res.setHeader("content-type", "application/json");
-        res.json(promotions);
-      })
-      .catch((err) => next(err));
-  });
+  .delete(
+    authenticate.verifyUser,
+    authenticate.verifyAdmin,
+    (req, res, next) => {
+      Promotion.deleteMany()
+        .then((promotions) => {
+          res.statusCode = 200;
+          res.setHeader("content-type", "application/json");
+          res.json(promotions);
+        })
+        .catch((err) => next(err));
+    }
+  );
 
 promotionRouter
   .route("/:promotionId")
@@ -57,7 +61,7 @@ promotionRouter
       `POST operation not support on campsites/${req.params.promotionId}`
     );
   })
-  .put(authenticate.verifyUser, (req, res, next) => {
+  .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotion.findByIdAndUpdate(
       req.params.promotionId,
       { $set: req.body },
@@ -70,14 +74,18 @@ promotionRouter
       })
       .catch((err) => next(err));
   })
-  .delete(authenticate.verifyUser, (req, res, next) => {
-    Promotion.findByIdAndDelete(req.params.promotionId)
-      .then((promotion) => {
-        res.statusCode = 200;
-        res.setHeader("content-type", "application/json");
-        res.json(promotion);
-      })
-      .catch((err) => next(err));
-  });
+  .delete(
+    authenticate.verifyUser,
+    authenticate.verifyAdmin,
+    (req, res, next) => {
+      Promotion.findByIdAndDelete(req.params.promotionId)
+        .then((promotion) => {
+          res.statusCode = 200;
+          res.setHeader("content-type", "application/json");
+          res.json(promotion);
+        })
+        .catch((err) => next(err));
+    }
+  );
 
 module.exports = promotionRouter;
