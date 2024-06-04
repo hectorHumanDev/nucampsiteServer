@@ -5,14 +5,14 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const jwt = require("jsonwebtoken");
 
-const config = require("./config.js");
+const config = require("./config");
 
 exports.local = passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 exports.getToken = function (user) {
-  return jwt.sign(user, config.secretKey, { expiresIn: 3000 });
+  return jwt.sign(user, config.secretKey, { expiresIn: 3600 });
 };
 
 exports.verifyAdmin = (req, res, next) => {

@@ -24,6 +24,13 @@ usersRouter.post("/signup", async (req, res) => {
     const user = new User({ username: req.body.username });
     await User.register(user, req.body.password);
 
+    if (req.body.firstname) {
+      user.firstname = req.body.firstname;
+    }
+    if (req.body.lastname) {
+      user.lastname = req.body.lastname;
+    }
+
     try {
       await user.save();
       passport.authenticate("local")(req, res, () => {
